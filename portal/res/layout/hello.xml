@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ScrollView1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="top" >
+
+    <Button
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="back" />
+    
+     <ListView
+         android:id="@+id/listView1"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_below="@+id/textView1"
+         android:clickable="true"
+         android:scrollbarAlwaysDrawVerticalTrack="true"
+         android:scrollbarStyle="insideOverlay"
+         tools:listitem="@android:layout/simple_list_item_1" >
+
+    </ListView>
+
+     <TextView
+         android:id="@+id/textView1"
+         android:layout_width="wrap_content"
+         android:layout_height="39dp"
+         android:layout_alignParentRight="true"
+         android:layout_below="@+id/button1"
+         android:layout_toRightOf="@+id/searchSys"
+         android:text="TextView" />
+
+     <EditText
+         android:id="@+id/searchSys"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_below="@+id/back"
+         android:ems="10" />
+
+     <Button
+         android:id="@+id/button1"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_above="@+id/searchSys"
+         android:layout_toRightOf="@+id/back"
+         android:text="Refresh" />
+
+</RelativeLayout>
