@@ -109,23 +109,29 @@ public class MapPortal extends Activity implements LocationListener{
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 
-		context = this;
+		//context = this;
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_map);
 		back = (Button) findViewById(R.id.button1);
-		gMap = ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
+		
 		markertable = new Marker[10];
-
+		
 		initicons();
-
+		
+		
+		
 		try {
-			MapsInitializer.initialize(context);
+			MapsInitializer.initialize(this);
+			
 		} catch (GooglePlayServicesNotAvailableException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.out.println("Google Play services not available.");
 		}
-
+		
+		gMap = ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
+		
 		Bundle objetbunble  = this.getIntent().getExtras();
 		if (objetbunble != null && objetbunble.containsKey("lat") && objetbunble.containsKey("lon")  ){
 			String[] lat = this.getIntent().getStringArrayExtra("lat");
@@ -189,7 +195,7 @@ public class MapPortal extends Activity implements LocationListener{
 	@Override
 	public void onResume() {
 		super.onResume();
-		/*
+				/*
 		//Obtention de la référence du service
 		locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
 

@@ -28,7 +28,7 @@
         android:layout_below="@+id/email"
         android:ems="8"
         android:inputType="textPassword"
-        android:text="zs18mk--" >
+        android:text="" >
 
         <requestFocus />
     </EditText>
@@ -52,7 +52,7 @@
         android:layout_marginTop="13dp"
         android:ems="8"
         android:inputType="textPersonName"
-        android:text="hdebernard@sierrawireless.com" />
+        android:text="" />
 
     <Button
         android:id="@+id/Ok"
