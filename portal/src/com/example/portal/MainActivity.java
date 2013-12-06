@@ -182,9 +182,8 @@ public class MainActivity extends Activity  {
 		String username = _username;
 		String password = _password;
 		String token ="";
-		URL="http://qa-trunk.m2mop.net/api/oauth/token?client_id=085d82466f824079a829f301b8a1f492&grant_type=password&" ;
-		URL=URL + "username=" + username + "&password=" + password + "&client_secret=6854fa72f98e492db163458085d5b89c";
-
+		URL = "XXXX"
+		
 
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = 
