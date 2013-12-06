@@ -122,7 +122,7 @@ def _getToken():
     username = param.userName
     password  =param.password
     #accountName = param.accountName
-    request_url = api_url + "?client_id=085d82466f824079a829f301b8a1f492&grant_type=password&username="+ username + "&password=" + password +"&client_secret=6854fa72f98e492db163458085d5b89c"
+    request_url = api_url + "?client_id=xxxxxxx&grant_type=password&username="+ username + "&password=" + password +"&client_secret=6854fa72f98e492db163458085d5b89c"
     req = requests.get(request_url)
     response = req.json()
     getToken = response["access_token"]
