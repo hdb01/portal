@@ -9,10 +9,9 @@ import random
 import sys
 import time
 import requests
-import thread
 import threading
-#import datetime
-#from datetime import date, timedelta
+
+
 import ConfigParser
 
 global param
@@ -146,10 +145,10 @@ def _getSystemList():
 
 def createRequest(serialNumber,site):
     sn=serialNumber
-    print (sn)
+    #print (sn)
     data = SystemMSCI()
     data.genereDonnees(site)
-    data.afficheDonnees()
+    #data.afficheDonnees()
 
     postRequestContent = ("\n" +
     "<body> \n "    +
@@ -175,14 +174,15 @@ def postRequest(url, sn,site ):
     req = requests.post(url, data=createrequest)
     #print(req.text)
 
-def launchComm(postUrl,systemlist, i, count):
+def launchComm(threadname, postUrl,systemlist, i1, i2):
     
-    while (i < count)  :
-        print("i = " , i)
-        sn = systemlist["items"][i]["gateway"]["serialNumber"]
+    while (i1 <= i2)  :
+       
+        sn = systemlist["items"][i1]["gateway"]["serialNumber"]
+        print threadname, "   i = " , i1, "===" , sn ,  "\n"
         if sn is not None :
             postRequest(postUrl, sn, param.site)
-        i = i + 1 
+        i1 = i1 + 1 
 
 
 
@@ -197,16 +197,10 @@ class myThread (threading.Thread):
         
         
     def run(self):
-        print "Starting " + self.name
-        # Get lock to synchronize threads
-        #threadLock.acquire()
-        # print_time(self.name, self.counter, 3)
-        launchComm (self.postUrl, self.systemList, self.i1, self.i2)
-        # Free lock to release next thread
-        #threadLock.release()
-
-
-
+        #print "Starting " + self.name
+        launchComm (self.name, self.postUrl, self.systemList, self.i1, self.i2)
+        
+        
 def main(argv):
     global param
 
@@ -218,8 +212,8 @@ def main(argv):
     count = int(systemlist["count"])
     print ( str(count) + " Systemes")
     
-    thread1 = myThread(1, postUrl, systemlist, 0, count/2 )
-    thread2 = myThread(2, postUrl, systemlist, (count/2)+1, count)
+    thread1 = myThread(1, postUrl, systemlist, 0, (count/2)-1 )
+    thread2 = myThread(2, postUrl, systemlist, (count/2), count-1)
         
     # Start new Threads
     thread1.start()
