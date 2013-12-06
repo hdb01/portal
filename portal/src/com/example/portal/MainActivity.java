@@ -182,7 +182,7 @@ public class MainActivity extends Activity  {
 		String username = _username;
 		String password = _password;
 		String token ="";
-		URL = "XXXX"
+		URL = "XXXX";
 		
 
 		if (android.os.Build.VERSION.SDK_INT > 9) {
