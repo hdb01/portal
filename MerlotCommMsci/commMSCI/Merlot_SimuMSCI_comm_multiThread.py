@@ -7,10 +7,9 @@
 
 import random
 import sys
-import time
 import requests
 import threading
-
+import logging
 
 import ConfigParser
 
@@ -18,7 +17,7 @@ global param
 
 class  Parametre:
     config = ConfigParser.RawConfigParser()
-    config.read('propertie1.ini')
+    config.read('propertieMSCI.ini')
     serverUrl = config.get('SERVER', 'serverUrl')
     userName = config.get('SERVER', 'userName')
     password = config.get('SERVER', 'password')
@@ -119,7 +118,7 @@ def _getAccountUid():
 def _getToken():
     global param
     api_url = param.serverUrl + "/api/oauth/token"
-    print (api_url)
+    logging.info(api_url)
     username = param.userName
     password  =param.password
     #accountName = param.accountName
@@ -162,7 +161,7 @@ def createRequest(serialNumber,site):
     "<sts id=\"284\">" + str(data.BytesReceived) + "</sts>  \n " +
     "<sts id=\"772\">" + str(data.ECIO) + "</sts>  \n " +
     "<sts id=\"770\">" + str(data.Operator) + "</sts>  \n " +
-    "<sts id=\"770\">" + str(data.Operator) + "</sts>  \n " +
+    "<sts id=\"773\">Cell ID </sts>  \n " +
     "<sts id=\"5026\">" + str(data.avms) + "</sts>  \n " +
     "</readResponse></body>"
     )
@@ -179,16 +178,17 @@ def launchComm(threadname, postUrl,systemlist, i1, i2):
     while (i1 <= i2)  :
        
         sn = systemlist["items"][i1]["gateway"]["serialNumber"]
-        print threadname, "   i = " , i1, "===" , sn ,  "\n"
+        logging.debug(threadname +  "   i = " + str(i1) + "===" + sn)
         if sn is not None :
             postRequest(postUrl, sn, param.site)
         i1 = i1 + 1 
-
+    
 
 
 class myThread (threading.Thread):
     def __init__(self, threadID, postUrl, systemList, i1, i2):
         threading.Thread.__init__(self)
+        self._stopevent = threading.Event( )
         self.threadID = threadID
         self.postUrl = postUrl
         self.systemList = systemList
@@ -196,29 +196,48 @@ class myThread (threading.Thread):
         self.i2 = i2
         
         
-    def run(self):
-        #print "Starting " + self.name
+    def run(self):             
         launchComm (self.name, self.postUrl, self.systemList, self.i1, self.i2)
-        
+        self._stopevent.wait(2.0)
+        logging.debug( "le thread "+self.name +" s'est termine proprement")
+
+    
+    def stop(self):
+        self.Terminated = True    
         
 def main(argv):
     global param
-
     __init__()
-    global param
+    #global param
+    
+    logger = logging.getLogger("MSCI Comm.")
+    logging.basicConfig(level=logging.DEBUG)  
+    console = logging.StreamHandler()
+    #console.setLevel(logging.INFO)
+    #formatter = logging.Formatter('%(levelname)s -%(asctime)s - %(name)s -  %(message)s')
+    #console.setFormatter(formatter)
+    
+    logger.addHandler(console)
+    
     postUrl = param.serverUrl + "/device/msci"
-    print ("Retieve systems list ...wait")
+    logger.debug ("Retieve systems list ...wait")
     systemlist=_getSystemList()
     count = int(systemlist["count"])
-    print ( str(count) + " Systemes")
+    logger.debug ( "Nombre de system= " + str(count) + " Systemes")
+    nbreThread = 10;
+    i = 1
+    start = 0
     
-    thread1 = myThread(1, postUrl, systemlist, 0, (count/2)-1 )
-    thread2 = myThread(2, postUrl, systemlist, (count/2), count-1)
-        
-    # Start new Threads
-    thread1.start()
-    thread2.start()
-
-  
+    #return
+    
+    while (i <= nbreThread) :
+        end = start + (count/nbreThread)-1
+        logger.debug( "i = " +  str(i)  + "  start end =" +  str(start) + " "  + str(end))
+        thread =  myThread(i, postUrl, systemlist, start, end )
+        thread.start()
+        start = end + 1 
+        i = i + 1
+    
+      
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
